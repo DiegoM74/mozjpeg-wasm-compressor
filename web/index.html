@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compresor JPEG MozJPEG WASM</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding: 40px 20px;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+        h1 { color: #333; margin-bottom: 10px; }
+        .subtitle { color: #666; margin-bottom: 30px; }
+        #drop-zone {
+            width: 500px; max-width: 90vw; height: 200px; 
+            border: 3px dashed #ccc; border-radius: 10px;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center; 
+            margin-bottom: 20px; transition: all 0.3s;
+            background: white; cursor: pointer;
+        }
+        #drop-zone.dragover { background: #e0f7fa; border-color: #00bcd4; transform: scale(1.02); }
+        #drop-zone:hover { border-color: #00bcd4; }
+        .drop-text { font-size: 18px; color: #666; margin-bottom: 10px; }
+        .drop-hint { font-size: 14px; color: #999; }
+        .controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; }
+        button { padding: 12px 24px; font-size: 16px; cursor: pointer; border: none; border-radius: 6px; }
+        #compress-btn { background: #00bcd4; color: white; }
+        #compress-btn:hover:not(:disabled) { background: #0097a7; }
+        #download-btn { background: #4caf50; color: white; }
+        #download-btn:hover:not(:disabled) { background: #388e3c; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; background: #ccc; }
+        #status { margin: 20px 0; font-weight: bold; font-size: 16px; min-height: 24px; }
+        #stats { background: white; padding: 15px 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        #preview { max-width: 500px; max-height: 400px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); display: none; }
+        #preview[src] { display: block; }
+    </style>
+</head>
+<body>
+    <h1>🖼️ Compresor JPEG MozJPEG WASM</h1>
+    <p class="subtitle">Compresión en el navegador sin subir imágenes</p>
+    <div id="drop-zone">
+        <div class="drop-text">📁 Arrastra tu imagen JPEG aquí</div>
+        <div class="drop-hint">o haz clic para seleccionar</div>
+        <input type="file" id="file-input" accept="image/jpeg" style="display: none;">
+    </div>
+    <div class="controls">
+        <button id="compress-btn" disabled>⚡ Comprimir</button>
+        <button id="download-btn" disabled>⬇️ Descargar</button>
+    </div>
+    <div id="status">Esperando imagen...</div>
+    <div id="stats"></div>
+    <img id="preview" alt="Vista previa">
+    <script src="main.js?v=2"></script>
+</body>
+</html>

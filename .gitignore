@@ -1,0 +1,17 @@
+# WSL
+.DS_Store
+Thumbs.db
+
+# Build files (opcional, podés incluirlos si querés)
+build/
+
+# Node modules (si llegás a usar npm)
+node_modules/
+
+# IDE
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.pyc
