@@ -46,7 +46,7 @@ h1 {
 }
 
 #drop-zone {
-  width: 600px;
+  width: 800px;
   max-width: 100%;
   height: 250px;
   border: 2px dashed var(--border-color);
@@ -175,25 +175,118 @@ button:disabled {
   margin-bottom: 30px;
   font-size: 0.95rem;
   line-height: 1.8;
+  width: 800px;
+  max-width: 100%;
+}
+
+#stats:empty {
+  display: none;
 }
 
 #stats b {
   color: var(--accent-primary);
 }
 
-#preview {
-  max-width: 100%;
-  width: 600px;
-  height: auto;
-  border-radius: 16px;
-  border: 1px solid var(--border-color);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-  display: none;
+#image-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  max-width: 800px;
   margin-top: 20px;
 }
 
-#preview[src] {
-  display: block;
+.image-item {
+  display: flex;
+  align-items: center;
+  background: var(--card-bg);
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  gap: 15px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.image-item img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.image-info {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.unsupported-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 82, 82, 0.05);
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px dashed rgba(255, 82, 82, 0.2);
+  gap: 15px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.unsupported-item .image-info {
+  color: #ff5252;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.unsupported-item .delete-btn {
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  background: transparent;
+  border: 1px solid rgba(255, 82, 82, 0.4);
+}
+
+.unsupported-item .delete-btn:hover {
+  background: rgba(255, 82, 82, 0.1);
+  color: #ff5252;
+  box-shadow: none;
+}
+
+.image-name {
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.image-stats {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.image-stats b {
+  color: var(--accent-primary);
+}
+
+.delete-btn {
+  background: rgba(255, 82, 82, 0.1);
+  color: #ff5252;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 82, 82, 0.3);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.delete-btn:hover {
+  background: #ff5252;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 82, 82, 0.3);
 }
 
 /* Animations */

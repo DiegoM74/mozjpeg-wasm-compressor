@@ -8,28 +8,30 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=1" />
+    <link rel="stylesheet" href="styles.css?v=2" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   </head>
   <body>
     <h1>Compresor JPEG MozJPEG WASM</h1>
     <p class="subtitle">Compresión en el navegador sin subir imágenes</p>
     <div id="drop-zone">
-      <div class="drop-text">Arrastra tu imagen JPEG aquí</div>
-      <div class="drop-hint">o haz clic para seleccionar</div>
+      <div class="drop-text">Arrastra tus imágenes JPEG aquí</div>
+      <div class="drop-hint">o haz clic para seleccionar (puedes elegir varias)</div>
       <input
         type="file"
         id="file-input"
         accept="image/jpeg"
         style="display: none"
+        multiple
       />
     </div>
     <div class="controls">
-      <button id="compress-btn" disabled>Comprimir</button>
+      <button id="compress-btn" disabled>Comprimir Todo</button>
       <button id="download-btn" disabled>Descargar</button>
     </div>
-    <div id="status">Esperando imagen...</div>
+    <div id="status">Esperando imágenes...</div>
     <div id="stats"></div>
-    <img id="preview" alt="Vista previa" />
-    <script src="main.js?v=1"></script>
+    <div id="image-list"></div>
+    <script src="main.js?v=2"></script>
   </body>
 </html>
