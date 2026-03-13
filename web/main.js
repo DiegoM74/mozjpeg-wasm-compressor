@@ -1,4 +1,5 @@
 const dropZone = document.getElementById('drop-zone');
+const fileInput = document.getElementById('file-input');
 const compressBtn = document.getElementById('compress-btn');
 const downloadBtn = document.getElementById('download-btn');
 const statusText = document.getElementById('status');
@@ -10,6 +11,14 @@ let originalBuffer = null;
 let compressedBuffer = null;
 let worker = null;
 
+function updateStatus(text, type = 'default') {
+    statusText.textContent = text;
+    statusText.className = '';
+    if (type !== 'default') {
+        statusText.classList.add(`status-${type}`);
+    }
+}
+
 function initWorker() {
     // CACHE-BUSTING: Agregar timestamp para forzar recarga
     const workerUrl = './worker.js?v=' + Date.now();
@@ -17,17 +26,15 @@ function initWorker() {
     
     worker.onmessage = (e) => {
         if (e.data.type === 'ready') {
-            statusText.textContent = "✅ Motor MozJPEG WASM listo. Carga una imagen.";
-            statusText.style.color = 'green';
+            updateStatus("Motor MozJPEG WASM listo. Carga una imagen.", 'success');
         } else if (e.data.type === 'done') {
             compressedBuffer = e.data.buffer;
             const originalKB = (e.data.originalSize / 1024).toFixed(2);
             const compressedKB = (e.data.compressedSize / 1024).toFixed(2);
             const ratio = ((1 - e.data.compressedSize / e.data.originalSize) * 100).toFixed(1);
             
-            statusText.textContent = `✅ ¡Comprimido exitosamente!`;
-            statusText.style.color = 'green';
-            statsDiv.innerHTML = `<strong>Original:</strong> ${originalKB} KB | <strong>Comprimido:</strong> ${compressedKB} KB | <strong>Ahorro:</strong> ${ratio}%`;
+            updateStatus(`¡Comprimido exitosamente!`, 'success');
+            statsDiv.innerHTML = `<b>Original:</b> ${originalKB} KB | <b>Comprimido:</b> ${compressedKB} KB | <b>Ahorro:</b> ${ratio}%`;
             
             downloadBtn.disabled = false;
             compressBtn.disabled = false;
@@ -37,8 +44,7 @@ function initWorker() {
                 previewImg.src = URL.createObjectURL(blob);
             }
         } else if (e.data.type === 'error') {
-            statusText.textContent = "❌ Error: " + e.data.message;
-            statusText.style.color = 'red';
+            updateStatus("Error: " + e.data.message, 'error');
             compressBtn.disabled = false;
         }
     };
@@ -56,7 +62,11 @@ dropZone.addEventListener('drop', (e) => {
     }
 });
 
-document.getElementById('file-input').addEventListener('change', (e) => {
+dropZone.addEventListener('click', () => {
+    fileInput.click();
+});
+
+fileInput.addEventListener('change', (e) => {
     if (e.target.files.length) {
         handleFile(e.target.files[0]);
     }
@@ -64,7 +74,7 @@ document.getElementById('file-input').addEventListener('change', (e) => {
 
 function handleFile(file) {
     if (file.type !== 'image/jpeg') {
-        alert('⚠️ Solo se permiten imágenes JPEG');
+        alert('Solo se permiten imágenes JPG');
         return;
     }
     originalFile = file;
@@ -72,8 +82,7 @@ function handleFile(file) {
     reader.onload = (e) => {
         originalBuffer = e.target.result;
         const sizeKB = (file.size / 1024).toFixed(2);
-        statusText.textContent = `📁 Imagen cargada: ${sizeKB} KB`;
-        statusText.style.color = '#333';
+        updateStatus(`Imagen cargada: ${sizeKB} KB`, 'info');
         compressBtn.disabled = false;
         previewImg.src = URL.createObjectURL(file);
     };
@@ -82,14 +91,13 @@ function handleFile(file) {
 
 compressBtn.addEventListener('click', () => {
     if (!originalBuffer) {
-        alert('⚠️ Primero carga una imagen');
+        alert('Primero carga una imagen');
         return;
     }
     
     compressBtn.disabled = true;
     downloadBtn.disabled = true;
-    statusText.textContent = "⏳ Comprimiendo con MozJPEG...";
-    statusText.style.color = 'orange';
+    updateStatus("Comprimiendo con MozJPEG...", 'warning');
     statsDiv.innerHTML = '';
 
     const bufferCopy = originalBuffer.slice(0);
@@ -102,12 +110,15 @@ compressBtn.addEventListener('click', () => {
 });
 
 downloadBtn.addEventListener('click', () => {
-    if (!compressedBuffer) return;
+    if (!compressedBuffer || !originalFile) return;
+
+    const originalName = originalFile.name.substring(0, originalFile.name.lastIndexOf('.')) || originalFile.name;
     const blob = new Blob([compressedBuffer], { type: 'image/jpeg' });
     const url = URL.createObjectURL(blob);
+    
     const a = document.createElement('a');
     a.href = url;
-    a.download = `compressed-${Date.now()}.jpg`;
+    a.download = `${originalName}-compressed.jpg`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
