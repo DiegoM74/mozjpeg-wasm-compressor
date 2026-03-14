@@ -16,7 +16,13 @@
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -31,11 +37,6 @@ h1 {
   font-size: 2.5rem;
   font-weight: 800;
   margin-bottom: 12px;
-  background: linear-gradient(135deg, #fff 0%, #888 100%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  letter-spacing: -0.02em;
 }
 
 .subtitle {
@@ -64,13 +65,17 @@ h1 {
 }
 
 #drop-zone::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(0, 188, 212, 0.05) 0%, transparent 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(0, 188, 212, 0.05) 0%,
+    transparent 100%
+  );
   pointer-events: none;
 }
 
@@ -103,7 +108,7 @@ h1 {
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
   width: 100%;
   max-width: 800px;
 }
@@ -203,11 +208,21 @@ button:disabled {
   transition: var(--transition);
 }
 
-.status-success { color: var(--accent-secondary) !important; }
-.status-error { color: #ff5252 !important; }
-.status-info { color: var(--accent-primary) !important; }
-.status-warning { color: #ffd740 !important; }
-.status-default { color: var(--text-secondary) !important; }
+.status-success {
+  color: var(--accent-secondary) !important;
+}
+.status-error {
+  color: #ff5252 !important;
+}
+.status-info {
+  color: var(--accent-primary) !important;
+}
+.status-warning {
+  color: #ffd740 !important;
+}
+.status-default {
+  color: var(--text-secondary) !important;
+}
 
 #stats {
   background: var(--card-bg);
@@ -349,8 +364,14 @@ button:disabled {
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 body > * {

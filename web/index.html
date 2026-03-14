@@ -3,20 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Compresor JPEG MozJPEG WASM</title>
+    <title>Compresor JPEG WASM</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=2" />
+    <link rel="stylesheet" href="styles.css?v=1.2" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   </head>
   <body>
-    <h1>Compresor JPEG MozJPEG WASM</h1>
+    <h1>Compresor JPEG WASM</h1>
     <p class="subtitle">Compresión de imágenes en el navegador</p>
     <div id="drop-zone">
       <div class="drop-text">Arrastra tus imágenes JPEG aquí</div>
-      <div class="drop-hint">o haz clic para seleccionar (puedes elegir varias)</div>
+      <div class="drop-hint">
+        o haz clic para seleccionar (puedes elegir varias)
+      </div>
       <input
         type="file"
         id="file-input"
@@ -28,18 +30,18 @@
     <div class="controls-group">
       <div class="controls-main">
         <div class="controls">
-          <button id="compress-btn" disabled>Comprimir (General)</button>
+          <button id="compress-btn" disabled>Comprimir</button>
           <button id="download-btn" disabled>Descargar</button>
         </div>
       </div>
       <div class="controls-libs">
         <div class="controls-lib">
-          <span class="lib-label">MozJPEG:</span>
+          <span class="lib-label">MozJPEG</span>
           <button id="compress-mozjpeg-btn" disabled>Comprimir</button>
           <button id="download-mozjpeg-btn" disabled>Descargar</button>
         </div>
         <div class="controls-lib">
-          <span class="lib-label">Jpegli:</span>
+          <span class="lib-label">Jpegli</span>
           <button id="compress-jpegli-btn" disabled>Comprimir</button>
           <button id="download-jpegli-btn" disabled>Descargar</button>
         </div>
@@ -48,9 +50,11 @@
     <div id="status">Esperando imágenes...</div>
     <div id="stats"></div>
     <div id="list-actions" class="list-actions">
-      <button id="clear-all-btn" class="delete-btn">Eliminar todas las imágenes</button>
+      <button id="clear-all-btn" class="delete-btn">
+        Eliminar todas las imágenes
+      </button>
     </div>
     <div id="image-list"></div>
-    <script src="main.js?v=2"></script>
+    <script src="main.js?v=1.2"></script>
   </body>
 </html>

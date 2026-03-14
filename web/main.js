@@ -14,7 +14,7 @@ const imageList = document.getElementById("image-list");
 const listActions = document.getElementById("list-actions");
 const clearAllBtn = document.getElementById("clear-all-btn");
 
-let filesData = []; 
+let filesData = [];
 let workerMoz = null;
 let isCompressing = false;
 let isMozReady = false;
@@ -33,10 +33,10 @@ function checkWorkerStatus() {
   let msg = [];
   if (isMozReady) msg.push("MozJPEG listo");
   else msg.push("MozJPEG no disponible");
-  
+
   if (isJpegliReady) msg.push("Jpegli listo");
   else msg.push("Jpegli no disponible");
-  
+
   updateStatus(`${msg.join(" | ")}`, "info");
 }
 
@@ -83,9 +83,9 @@ function initWorkers() {
       updateButtonsState();
     }
   };
-  
+
   // Future Jpegli worker init here
-  isJpegliReady = false; 
+  isJpegliReady = false;
   checkWorkerStatus();
   updateButtonsState();
 }
@@ -95,21 +95,21 @@ initWorkers();
 function updateButtonsState() {
   const validFiles = filesData.filter((f) => !f.isUnsupported);
   const hasFiles = validFiles.length > 0;
-  
+
   if (!isCompressing) {
     if (isMozReady || isJpegliReady) compressBtn.disabled = !hasFiles;
     compressMozBtn.disabled = !(hasFiles && isMozReady);
     compressJpegliBtn.disabled = !(hasFiles && isJpegliReady);
   }
-  
-  const hasMoz = validFiles.some(f => f.mozjpegBuffer);
-  const hasJpegli = validFiles.some(f => f.jpegliBuffer);
-  const hasBest = validFiles.some(f => f.bestBuffer);
-  
+
+  const hasMoz = validFiles.some((f) => f.mozjpegBuffer);
+  const hasJpegli = validFiles.some((f) => f.jpegliBuffer);
+  const hasBest = validFiles.some((f) => f.bestBuffer);
+
   if (filesData.length > 0) {
-    listActions.style.display = 'flex';
+    listActions.style.display = "flex";
   } else {
-    listActions.style.display = 'none';
+    listActions.style.display = "none";
   }
 
   if (clearAllBtn) clearAllBtn.disabled = isCompressing;
@@ -148,7 +148,7 @@ fileInput.addEventListener("change", (e) => {
 if (clearAllBtn) {
   clearAllBtn.addEventListener("click", () => {
     if (isCompressing) return;
-    filesData.forEach(f => {
+    filesData.forEach((f) => {
       if (f.previewUrl) URL.revokeObjectURL(f.previewUrl);
     });
     filesData = [];
@@ -163,7 +163,8 @@ function handleFiles(newFiles) {
   if (isCompressing) return;
 
   for (const file of newFiles) {
-    const fileId = Date.now().toString() + Math.random().toString(36).substr(2, 5);
+    const fileId =
+      Date.now().toString() + Math.random().toString(36).substr(2, 5);
 
     if (file.type !== "image/jpeg") {
       filesData.push({
@@ -183,23 +184,23 @@ function handleFiles(newFiles) {
         originalFile: file,
         originalBuffer: e.target.result,
         originalSize: file.size,
-        
+
         mozjpegBuffer: null,
         mozjpegSize: null,
-        
+
         jpegliBuffer: null,
         jpegliSize: null,
-        
+
         bestBuffer: null,
         bestSize: null,
         bestLib: null,
-        
+
         previewUrl: URL.createObjectURL(file),
       });
       renderList();
       updateTotalStats();
       updateButtonsState();
-      
+
       const validFiles = filesData.filter((f) => !f.isUnsupported);
       updateStatus(`Imágenes cargadas: ${validFiles.length}`, "info");
     };
@@ -232,11 +233,11 @@ function removeFile(id) {
 
 function updateTotalStats() {
   let totalOriginal = 0;
-  
+
   let totalBest = 0;
   let totalMoz = 0;
   let totalJpegli = 0;
-  
+
   let hasBest = false;
   let hasMoz = false;
   let hasJpegli = false;
@@ -244,10 +245,19 @@ function updateTotalStats() {
   for (const f of filesData) {
     if (f.isUnsupported) continue;
     totalOriginal += f.originalSize;
-    
-    if (f.bestSize) { totalBest += f.bestSize; hasBest = true; }
-    if (f.mozjpegSize) { totalMoz += f.mozjpegSize; hasMoz = true; }
-    if (f.jpegliSize) { totalJpegli += f.jpegliSize; hasJpegli = true; }
+
+    if (f.bestSize) {
+      totalBest += f.bestSize;
+      hasBest = true;
+    }
+    if (f.mozjpegSize) {
+      totalMoz += f.mozjpegSize;
+      hasMoz = true;
+    }
+    if (f.jpegliSize) {
+      totalJpegli += f.jpegliSize;
+      hasJpegli = true;
+    }
   }
 
   if (totalOriginal === 0) {
@@ -257,25 +267,25 @@ function updateTotalStats() {
 
   const origMB = (totalOriginal / (1024 * 1024)).toFixed(2);
   let html = `<b>Total Original:</b> ${origMB} MB<br/>`;
-  
+
   if (hasBest) {
     const compMB = (totalBest / (1024 * 1024)).toFixed(2);
     const ratio = ((1 - totalBest / totalOriginal) * 100).toFixed(1);
     html += `<b>General (Mejor):</b> ${compMB} MB | <b>Ahorro:</b> ${ratio}%<br/>`;
   }
-  
+
   if (hasMoz) {
     const compMB = (totalMoz / (1024 * 1024)).toFixed(2);
     const ratio = ((1 - totalMoz / totalOriginal) * 100).toFixed(1);
     html += `<span style="color:var(--accent-secondary)">MozJPEG:</span> ${compMB} MB | Ahorro: ${ratio}%<br/>`;
   }
-  
+
   if (hasJpegli) {
     const compMB = (totalJpegli / (1024 * 1024)).toFixed(2);
     const ratio = ((1 - totalJpegli / totalOriginal) * 100).toFixed(1);
     html += `<span style="color:var(--accent-secondary)">Jpegli:</span> ${compMB} MB | Ahorro: ${ratio}%<br/>`;
   }
-  
+
   statsDiv.innerHTML = html;
 }
 
@@ -315,7 +325,7 @@ function renderList() {
 
     const stats = document.createElement("div");
     stats.className = "image-stats";
-    
+
     // Will be populated by updateFileDOM
     info.appendChild(name);
     info.appendChild(stats);
@@ -330,7 +340,7 @@ function renderList() {
 
     item.appendChild(btn);
     imageList.appendChild(item);
-    
+
     updateFileDOM(file);
   });
 }
@@ -342,27 +352,34 @@ function updateFileDOM(file) {
     if (statsEl) {
       const origKB = (file.originalSize / 1024).toFixed(2);
       let html = `<div class="stats-primary"><span>Original: ${origKB} KB</span>`;
-      
+
       if (file.bestSize) {
         const compKB = (file.bestSize / 1024).toFixed(2);
-        const ratio = ((1 - file.bestSize / file.originalSize) * 100).toFixed(1);
+        const ratio = ((1 - file.bestSize / file.originalSize) * 100).toFixed(
+          1,
+        );
         html += `<span><b>Mejor (${file.bestLib}): ${compKB} KB</b> (-${ratio}%)</span>`;
       }
       html += `</div>`;
-      
-      let detailsHtml = '';
+
+      let detailsHtml = "";
       if (file.mozjpegSize) {
         const compKB = (file.mozjpegSize / 1024).toFixed(2);
-        const ratio = ((1 - file.mozjpegSize / file.originalSize) * 100).toFixed(1);
+        const ratio = (
+          (1 - file.mozjpegSize / file.originalSize) *
+          100
+        ).toFixed(1);
         detailsHtml += `<div style="font-size:0.85em;color:var(--text-secondary)">MozJPEG: ${compKB} KB (-${ratio}%)</div>`;
       }
-      
+
       if (file.jpegliSize) {
         const compKB = (file.jpegliSize / 1024).toFixed(2);
-        const ratio = ((1 - file.jpegliSize / file.originalSize) * 100).toFixed(1);
+        const ratio = ((1 - file.jpegliSize / file.originalSize) * 100).toFixed(
+          1,
+        );
         detailsHtml += `<div style="font-size:0.85em;color:var(--text-secondary)">Jpegli: ${compKB} KB (-${ratio}%)</div>`;
       }
-      
+
       statsEl.innerHTML = html + detailsHtml;
     }
   }
@@ -374,7 +391,7 @@ async function doCompression(mode) {
 
   isCompressing = true;
   updateButtonsState();
-  
+
   const btns = document.querySelectorAll(".delete-btn");
   btns.forEach((b) => (b.disabled = true));
 
@@ -382,10 +399,13 @@ async function doCompression(mode) {
 
   for (let i = 0; i < validFiles.length; i++) {
     const f = validFiles[i];
-    updateStatus(`Comprimiendo (${i + 1}/${validFiles.length}): ${f.originalFile.name}...`, "warning");
+    updateStatus(
+      `Comprimiendo (${i + 1}/${validFiles.length}): ${f.originalFile.name}...`,
+      "warning",
+    );
 
     try {
-      if (mode === 'mozjpeg' || mode === 'general') {
+      if (mode === "mozjpeg" || mode === "general") {
         if (isMozReady) {
           const bufferCopy = f.originalBuffer.slice(0);
           const result = await compressImageMoz(bufferCopy);
@@ -393,16 +413,16 @@ async function doCompression(mode) {
           f.mozjpegSize = result.compressedSize;
         }
       }
-      
-      if (mode === 'jpegli' || mode === 'general') {
+
+      if (mode === "jpegli" || mode === "general") {
         if (isJpegliReady) {
           const bufferCopy = f.originalBuffer.slice(0);
           try {
-             const result = await compressImageJpegli(bufferCopy);
-             f.jpegliBuffer = result.buffer;
-             f.jpegliSize = result.compressedSize;
-          } catch(e) {
-             console.warn("Jpegli error", e);
+            const result = await compressImageJpegli(bufferCopy);
+            f.jpegliBuffer = result.buffer;
+            f.jpegliSize = result.compressedSize;
+          } catch (e) {
+            console.warn("Jpegli error", e);
           }
         }
       }
@@ -433,7 +453,7 @@ async function doCompression(mode) {
       }
 
       if (f.bestBuffer) successCount++;
-      
+
       updateFileDOM(f);
       updateTotalStats();
     } catch (err) {
@@ -445,34 +465,55 @@ async function doCompression(mode) {
   updateButtonsState();
 
   if (successCount > 0) {
-    updateStatus(`¡Completado! Se comprimieron ${successCount} de ${validFiles.length} imágenes.`, "success");
+    updateStatus(
+      `¡Completado! Se comprimieron ${successCount} de ${validFiles.length} imágenes.`,
+      "success",
+    );
   } else {
     updateStatus("Ocurrió un error al comprimir las imágenes.", "error");
     renderList();
   }
 }
 
-compressBtn.addEventListener("click", () => doCompression('general'));
-compressMozBtn.addEventListener("click", () => doCompression('mozjpeg'));
-compressJpegliBtn.addEventListener("click", () => doCompression('jpegli'));
+compressBtn.addEventListener("click", () => doCompression("general"));
+compressMozBtn.addEventListener("click", () => doCompression("mozjpeg"));
+compressJpegliBtn.addEventListener("click", () => doCompression("jpegli"));
 
 async function doDownload(mode) {
   let filesToDownload = [];
-  
-  if (mode === 'general') {
-    filesToDownload = filesData.filter((f) => f.bestBuffer).map(f => ({ name: f.originalFile.name, buffer: f.bestBuffer, lib: f.bestLib }));
-  } else if (mode === 'mozjpeg') {
-    filesToDownload = filesData.filter((f) => f.mozjpegBuffer).map(f => ({ name: f.originalFile.name, buffer: f.mozjpegBuffer, lib: "MozJPEG" }));
-  } else if (mode === 'jpegli') {
-    filesToDownload = filesData.filter((f) => f.jpegliBuffer).map(f => ({ name: f.originalFile.name, buffer: f.jpegliBuffer, lib: "Jpegli" }));
+
+  if (mode === "general") {
+    filesToDownload = filesData
+      .filter((f) => f.bestBuffer)
+      .map((f) => ({
+        name: f.originalFile.name,
+        buffer: f.bestBuffer,
+        lib: f.bestLib,
+      }));
+  } else if (mode === "mozjpeg") {
+    filesToDownload = filesData
+      .filter((f) => f.mozjpegBuffer)
+      .map((f) => ({
+        name: f.originalFile.name,
+        buffer: f.mozjpegBuffer,
+        lib: "MozJPEG",
+      }));
+  } else if (mode === "jpegli") {
+    filesToDownload = filesData
+      .filter((f) => f.jpegliBuffer)
+      .map((f) => ({
+        name: f.originalFile.name,
+        buffer: f.jpegliBuffer,
+        lib: "Jpegli",
+      }));
   }
-  
+
   if (filesToDownload.length === 0) return;
 
   if (filesToDownload.length === 1) {
     const f = filesToDownload[0];
     const originalName = f.name.substring(0, f.name.lastIndexOf(".")) || f.name;
-    const suffix = f.lib ? `-${f.lib.toLowerCase()}` : '';
+    const suffix = f.lib ? `-${f.lib.toLowerCase()}` : "";
     const blob = new Blob([f.buffer], { type: "image/jpeg" });
     const url = URL.createObjectURL(blob);
 
@@ -488,7 +529,6 @@ async function doDownload(mode) {
     try {
       const zip = new JSZip();
       filesToDownload.forEach((f) => {
-        // Podríamos añadir sufijo al archivo en el zip si queremos, o dejarlo original para reemplazar
         zip.file(f.name, f.buffer);
       });
 
@@ -509,6 +549,6 @@ async function doDownload(mode) {
   }
 }
 
-downloadBtn.addEventListener("click", () => doDownload('general'));
-downloadMozBtn.addEventListener("click", () => doDownload('mozjpeg'));
-downloadJpegliBtn.addEventListener("click", () => doDownload('jpegli'));
+downloadBtn.addEventListener("click", () => doDownload("general"));
+downloadMozBtn.addEventListener("click", () => doDownload("mozjpeg"));
+downloadJpegliBtn.addEventListener("click", () => doDownload("jpegli"));
