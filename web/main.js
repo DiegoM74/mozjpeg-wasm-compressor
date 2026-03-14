@@ -16,6 +16,7 @@ const clearAllBtn = document.getElementById("clear-all-btn");
 
 let filesData = [];
 let workerMoz = null;
+let workerJpegli = null;
 let isCompressing = false;
 let isMozReady = false;
 let isJpegliReady = false; // Simulated as false for now, since it's not ready
@@ -64,12 +65,26 @@ function compressImageMoz(buffer) {
   });
 }
 
-// Simulacion de Jpegli para un futuro
 function compressImageJpegli(buffer) {
   return new Promise((resolve, reject) => {
-    if (!isJpegliReady) reject(new Error("Jpegli no está disponible"));
-    // Aquí iría el código cuando Jpegli esté listo
-    reject(new Error("No implementado aún"));
+    workerJpegli.onmessage = (e) => {
+      if (e.data.type === "done") {
+        resolve({
+          buffer: e.data.buffer,
+          originalSize: e.data.originalSize,
+          compressedSize: e.data.compressedSize,
+        });
+      } else if (e.data.type === "error") {
+        reject(new Error(e.data.message));
+      }
+      // Ignore "ready" messages
+    };
+    workerJpegli.onerror = (e) => reject(e);
+    workerJpegli.postMessage({
+      imageBuffer: buffer,
+      distance: 0.1,      // Equivalente a ~quality 95
+      subsampling: 2,     // 4:2:0 (mejor compresión)
+    });
   });
 }
 
@@ -84,8 +99,22 @@ function initWorkers() {
     }
   };
 
-  // Future Jpegli worker init here
-  isJpegliReady = false;
+  // Jpegli Worker
+  const workerJpegliUrl = "./worker-jpegli.js?v=" + Date.now();
+  workerJpegli = new Worker(workerJpegliUrl);
+  workerJpegli.onmessage = (e) => {
+    if (e.data.type === "ready") {
+      isJpegliReady = true;
+      checkWorkerStatus();
+      updateButtonsState();
+    } else if (e.data.type === "error") {
+      console.error("Jpegli worker error:", e.data.message);
+    }
+  };
+  workerJpegli.onerror = (e) => {
+    console.error("Jpegli worker error:", e);
+  };
+
   checkWorkerStatus();
   updateButtonsState();
 }

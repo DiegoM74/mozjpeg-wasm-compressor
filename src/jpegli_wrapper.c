@@ -1,1 +1,0 @@
-// Para implementar Jpegli en un futuro
